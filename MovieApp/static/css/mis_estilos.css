@@ -1,0 +1,30 @@
+.lista-peliculas{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    margin: 30px;
+}
+
+.movie-details {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.movie-title {
+    font-size: 24px;
+}
+.movie-info {
+    font-size: 18px;
+}
+.movie-synopsis {
+    font-size: 16px;
+}
+.reviews-title {
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+
+
+

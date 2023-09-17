@@ -3,11 +3,11 @@
 
  {% block ContenidoQueCambia %} 
 
-     <form action="{% url 'CreaPelicula' %}" method="post">{% csrf_token %}
+     <form action="{% url 'CreaPelicula' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
 
          {{form.as_p}} 
         
-         <button type="submit">Enviar</button>
+         <button type="submit">Guardar</button>
 
      </form>
 

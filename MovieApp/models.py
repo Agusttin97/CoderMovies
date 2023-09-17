@@ -15,6 +15,7 @@ class Pelicula(models.Model):
     estreno = models.DateField()
     sinopsis = models.TextField()
     duracion = models.IntegerField()
+    portada = models.ImageField(upload_to='portadas/', null=True, blank=True)
     
     
     def __str__(self):

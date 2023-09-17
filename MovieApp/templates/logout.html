@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logout</title>
-</head>
-<body>
-    <h1>Gracias por su visita, vuelva prontoss</h1>
+{% extends 'padre.html' %} 
 
-    <a href="{% url 'Home' %}">Home</a>
-</body>
-</html>
+{% block ContenidoQueCambia %} 
+
+<h1> Gracias por su visita! <h2>
+
+{% endblock ContenidoQueCambia %}

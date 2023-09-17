@@ -1,12 +1,16 @@
 {% extends 'padre.html' %}
 
 {% block ContenidoQueCambia %}
-    <h1>Vista en detalle de Película</h1>
-    <h3>Titulo: {{ pelicula.titulo }}</h3>
-    <h3>Genero: {{ pelicula.genero }}</h3>
-    <h3>Estreno: {{ pelicula.estreno }}</h3>
-    <h3>Sinopsis: {{ pelicula.sinopsis }}</h3>
-    <h3>Duracion: {{ pelicula.duracion }} min.</h3>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<div class="container">
+    <div class="movie-details">
+        <h1 class="movie-title">Vista en detalle de Película</h1>
+        <img src="{{pelicula.portada.url}}" class="card-img-top" alt="{{pelicula.titulo}} Portada" style="width: 300px;">
+        <h3 class="movie-info">Título: {{ pelicula.titulo }}</h3>
+        <h3 class="movie-info">Género: {{ pelicula.genero }}</h3>
+        <h3 class="movie-info">Estreno: {{ pelicula.estreno }}</h3>
+        <h3 class="movie-info">Duración: {{ pelicula.duracion }} min.</h3>
+        <h3 class="movie-synopsis">Sinopsis: {{ pelicula.sinopsis }}</h3>
 
     <h2>Reseñas</h2>
     <ul>

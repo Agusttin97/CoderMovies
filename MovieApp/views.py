@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator, Page # Paginar
 
 
 from .models import *
@@ -113,6 +114,17 @@ class PeliculaList(ListView):
     model = Pelicula
     template_name = "lista_pelicula.html"
     context_object_name = "peliculas"
+    paginate_by = 3 # Numero de peliculas por pagina
+    
+    def get_queryset(self):
+        return Pelicula.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = self.request.GET.get('page')
+        paginator = Paginator(self.object_list, self.paginate_by)
+        context["peliculas"] = paginator.get_page(page)
+        return context  
     
 class PeliculaDetail(FormMixin, DetailView):
     model = Pelicula
@@ -170,7 +182,7 @@ class PeliculaUpdate(UpdateView):
 class PeliculaDelete(DeleteView):
     model = Pelicula 
     template_name = "elimina_pelicula.html"
-    success_url = "/movie-app/"
+    success_url = "/movie-app/lista-pelicula"
 
 
 # Perfil
@@ -287,14 +299,25 @@ def eliminaFavoritos(req, pelicula_id):
 
     return redirect('ListaPelicula')
 
-def listaFavoritos(request):
+def listaFavoritos(req):
 
-    usuario = request.user.usuario
+    usuario = req.user.usuario
     peliculas_favoritas = usuario.favoritos.all()
 
-    return render(request, 'lista_favoritos.html', {'peliculas_favoritas': peliculas_favoritas})
+    return render(req, 'lista_favoritos.html', {'peliculas_favoritas': peliculas_favoritas})
 
 
+def buscaPelicula(req):
+    if req.method == 'POST':
+        nombre_pelicula = req.POST.get('nombre_pelicula', '')
+        if nombre_pelicula:
+            try:
+                pelicula = Pelicula.objects.get(titulo__iexact=nombre_pelicula)
+                return redirect('DetallePelicula', pk=pelicula.id)
+            except Pelicula.DoesNotExist:
+                error_message = "No se encontro la pelicula"
+                return render(req, 'lista_pelicula.html', {'error_message': error_message})
+    return render(req, 'lista_pelicula.html')
 
 
 

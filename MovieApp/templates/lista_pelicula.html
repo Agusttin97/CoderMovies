@@ -1,31 +1,65 @@
 {% extends 'padre.html' %} 
 {% block ContenidoQueCambia %} 
-{{favs}}
-<ul>        
-    {% for pelicula in peliculas %}
-        <li>
-            <a href="{% url 'DetallePelicula' pelicula.id %}">{{ pelicula }}</a>
-        </li>
-        <div>           
-            {% if user.is_staff %} {# Verificar si el usuario es staff #}
-                <button>
-                    <a href="{% url 'EliminaPelicula' pelicula.id %}">Eliminar</a>
-                </button>
-                <button>
-                    <a href="{% url 'ActualizaPelicula' pelicula.id %}">Editar</a>
-                </button>
-            {% endif %}
-            {% if pelicula not in user.usuario.favoritos.all %}
-                    <button>
-                        <a href="{% url 'AgregaFavoritos' pelicula.id %}">Agregar a Favoritos</a>
-                    </button>
-            {% endif %}
+
+<form method="post" action="{% url 'BuscaPelicula' %}" class="mb-4">
+    {% csrf_token %}
+    <div class="input-group">
+        <input type="text" name="nombre_pelicula" class="form-control" placeholder="Buscar película">
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Buscar</button>
         </div>
+    </div>
+</form>
+
+
+<p>{{error_message}}</p>
+
+<section class="lista-peliculas">    
+    {% for pelicula in peliculas %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{pelicula.portada.url}}" class="card-img-top" alt="{{pelicula.titulo}} Portada">
+        <div class="card-body">
+          <h5 class="card-title">{{pelicula}}</h5>
+          <a href="{% url 'DetallePelicula' pelicula.id %}" class="btn btn-primary">Detalles</a>
+        </div>
+        {% if pelicula not in user.usuario.favoritos.all %}
+        <button>
+            <a href="{% url 'AgregaFavoritos' pelicula.id %}">Agregar a Favoritos</a>
+        </button>
+        {% endif %}
+        {% if user.is_staff %} {# Verificar si el usuario es staff #}
+            <button>
+                <a href="{% url 'EliminaPelicula' pelicula.id %}">Eliminar</a>
+            </button>
+            <button>
+                <a href="{% url 'ActualizaPelicula' pelicula.id %}">Editar</a>
+            </button>
+        {% endif %}
+    </div>
     {% endfor %}
-</ul>
+</section>
+<div class="d-flex justify-content-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if peliculas.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ peliculas.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            
+            <li class="page-item disabled"><span class="page-link">{{ peliculas.number }} of {{ peliculas.paginator.num_pages }}</span></li>
+            
+            {% if peliculas.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ peliculas.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ peliculas.paginator.num_pages }}">Last</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
 
 {% if user.is_staff %} {# Mostrar el botón de "Crear Película" solo para staff #}
-    <a href="{% url 'CreaPelicula' %}">Crear Película</a>
+
+        <a href="{% url 'CreaPelicula' %}" class="btn btn-primary">Crear Película</a>
+
 {% endif %}
            
 {% endblock ContenidoQueCambia %}
