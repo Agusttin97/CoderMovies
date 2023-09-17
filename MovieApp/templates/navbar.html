@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'Home' %}">CoderMovies</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                    {% if user.avatar %}
+                        <li class="nav-item">
+                            <span class="text-light mx-2 user-name">
+                                <img src="{{ user.avatar.imagen.url }}" alt="Avatar" class="avatar-image" style="height: 30px;">
+                                {{ user.username }}
+                            </span>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <span class="text-light mx-2 user-name">
+                                {{ user.username }}
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'Perfil' %}">Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'Logout' %}">Cerrar Sesión</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'ListaPelicula' %}">Películas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'ListaFavoritos' %}">Favoritos</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'Registro' %}">Regístrate</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'Login' %}">Inicia Sesión</a></li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link" href="#!">Sobre Mí</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+

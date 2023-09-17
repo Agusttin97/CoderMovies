@@ -1,0 +1,10 @@
+{% extends 'padre.html' %}
+
+{% block ContenidoQueCambia %}
+  <h2>Editar Reseña</h2>
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar Cambios</button>
+  </form>
+  <a href="{% url 'DetallePelicula' pelicula.pk %}">Volver a los detalles de la película</a>
+{% endblock ContenidoQueCambia %}

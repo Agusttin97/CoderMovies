@@ -1,0 +1,36 @@
+{% extends 'padre.html' %} 
+{% block ContenidoQueCambia %} 
+{{favs}}
+<ul>        
+    {% for pelicula in peliculas %}
+        <li>
+            <a href="{% url 'DetallePelicula' pelicula.id %}">{{ pelicula }}</a>
+        </li>
+        <div>           
+            {% if user.is_staff %} {# Verificar si el usuario es staff #}
+                <button>
+                    <a href="{% url 'EliminaPelicula' pelicula.id %}">Eliminar</a>
+                </button>
+                <button>
+                    <a href="{% url 'ActualizaPelicula' pelicula.id %}">Editar</a>
+                </button>
+            {% endif %}
+            {% if pelicula not in user.usuario.favoritos.all %}
+                    <button>
+                        <a href="{% url 'AgregaFavoritos' pelicula.id %}">Agregar a Favoritos</a>
+                    </button>
+            {% endif %}
+        </div>
+    {% endfor %}
+</ul>
+
+{% if user.is_staff %} {# Mostrar el botón de "Crear Película" solo para staff #}
+    <a href="{% url 'CreaPelicula' %}">Crear Película</a>
+{% endif %}
+           
+{% endblock ContenidoQueCambia %}
+
+
+
+
+

@@ -1,0 +1,34 @@
+{% extends 'padre.html' %}
+
+{% block ContenidoQueCambia %}
+    <h1>Vista en detalle de Película</h1>
+    <h3>Titulo: {{ pelicula.titulo }}</h3>
+    <h3>Genero: {{ pelicula.genero }}</h3>
+    <h3>Estreno: {{ pelicula.estreno }}</h3>
+    <h3>Sinopsis: {{ pelicula.sinopsis }}</h3>
+    <h3>Duracion: {{ pelicula.duracion }} min.</h3>
+
+    <h2>Reseñas</h2>
+    <ul>
+        {% for reseña in reseñas %}
+            <li>
+                <p>Usuario: {{ reseña.usuario.username }}</p>
+                <p>Fecha: {{ reseña.fecha }}</p>
+                <p>Reseña: {{ reseña.reseña }}</p>
+                {% if user.is_authenticated and reseña.usuario == user %}
+                    <a href="{% url 'ActualizaReseña' reseña.pk %}">Editar</a>
+                    <a href="{% url 'EliminaReseña' reseña.pk %}">Eliminar</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>No hay reseñas disponibles.</p>
+        {% endfor %}
+    </ul>
+
+    <h2>Escribir una reseña</h2>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enviar reseña</button>
+    </form>
+{% endblock ContenidoQueCambia %}

@@ -1,0 +1,16 @@
+{% extends 'padre.html' %} 
+{% block ContenidoQueCambia %} 
+<h2>Películas Favoritas</h2>
+<ul>
+    {% for pelicula in peliculas_favoritas %}
+        <li>
+            <a href="{% url 'DetallePelicula' pelicula.id %}">{{ pelicula }}</a>
+            <button>
+                <a href="{% url 'EliminaFavoritos' pelicula.id %}">Eliminar</a>
+            </button>
+        </li>
+    {% empty %}
+        <li>No tienes películas favoritas.</li>
+    {% endfor %}
+</ul>
+{% endblock ContenidoQueCambia %}

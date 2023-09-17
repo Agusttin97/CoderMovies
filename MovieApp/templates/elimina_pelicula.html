@@ -1,0 +1,15 @@
+{% extends 'padre.html' %} 
+
+{% block ContenidoQueCambia %} 
+
+    <form method="post">{% csrf_token %}
+
+        <p>¿Seguro desea eliminar?</p>
+        
+
+        <button type="submit">Confirmar</button>
+        <button><a href="{% url 'Home' %}">Cancelar</a></button>
+
+    </form>
+
+{% endblock ContenidoQueCambia %}

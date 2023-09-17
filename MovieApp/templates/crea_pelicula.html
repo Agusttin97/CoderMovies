@@ -1,0 +1,15 @@
+ {% extends 'padre.html' %} 
+ {% load static %}
+
+ {% block ContenidoQueCambia %} 
+
+     <form action="{% url 'CreaPelicula' %}" method="post">{% csrf_token %}
+
+         {{form.as_p}} 
+        
+         <button type="submit">Enviar</button>
+
+     </form>
+
+            
+ {% endblock ContenidoQueCambia %}
