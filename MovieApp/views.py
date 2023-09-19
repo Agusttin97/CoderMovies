@@ -11,6 +11,8 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, Page # Paginar
 
 
@@ -25,26 +27,21 @@ def home(req):
 #Login/Registro
 
 def registro(req):
-    
     if req.method == 'POST':
-        
         miFormulario = UserCreationForm(req.POST)
-        
         if miFormulario.is_valid():
-            
             data = miFormulario.cleaned_data
-            
             usuario = data["username"]
-            
             miFormulario.save()
             
-            return render(req, "home.html", {"mensaje": f"Usuario {usuario} creado con exito!"})
-
+            # Crea un objeto Usuario relacionado con el nuevo usuario
+            nuevo_usuario = User.objects.get(username=usuario)
+            nuevo_objeto_usuario = Usuario.objects.create(user=nuevo_usuario, nombre='', apellido='', email='')
+            
+            return render(req, "home.html", {"mensaje": f"Usuario {usuario} creado con éxito!"})
         else:
-            return render(req, "home.html", {"mensaje": "Formulario invalido"})       
-    
+            return render(req, "home.html", {"mensaje": "Formulario inválido"})
     else:
-        
         miFormulario = UserCreationForm()
         return render(req, "registro.html", {"miFormulario": miFormulario})
 
@@ -186,6 +183,7 @@ class PeliculaDelete(DeleteView):
 
 
 # Perfil
+@login_required
 def editarPerfil(req):
     usuario = req.user
     try:
@@ -214,7 +212,7 @@ def editarPerfil(req):
             avatar.save()
             
             
-            return render(req, "editar_perfil.html", {"miFormularioUsuario": miFormulario, "miFormularioAvatar": formulario_avatar})
+            return render(req, "editar_perfil.html", {"mensaje": "Perfil actualizado con exito" ,"miFormularioUsuario": miFormulario, "miFormularioAvatar": formulario_avatar})
     else:
         miFormulario = UserEditForm(instance=usuario)
         formulario_avatar = AvatarForm(instance=avatar)
@@ -223,7 +221,7 @@ def editarPerfil(req):
     
 
 # CRUD Reseñas 
-class ReseñaCreate(CreateView):
+class ReseñaCreate(LoginRequiredMixin, CreateView):
     model = Reseña
     form_class = ReseñaForm  # Ajusta el nombre del formulario según tu aplicación
     template_name = "detalle_pelicula.html"  # Asegúrate de que la plantilla sea la correcta
@@ -240,7 +238,7 @@ class ReseñaCreate(CreateView):
         context['form'] = ReseñaForm()  # Ajusta el nombre del formulario según tu aplicación
         return context
     
-class ReseñaUpdate(UpdateView):
+class ReseñaUpdate(LoginRequiredMixin, UpdateView):
     model = Reseña
     fields = ['reseña']
     template_name = 'actualiza_reseña.html'
@@ -258,7 +256,7 @@ class ReseñaUpdate(UpdateView):
         context['pelicula'] = self.object.pelicula  # Agregar la película al contexto
         return context
     
-class ReseñaDelete(DeleteView):
+class ReseñaDelete(LoginRequiredMixin, DeleteView):
     model = Reseña
     template_name = 'elimina_reseña.html'
 
@@ -278,6 +276,7 @@ class ReseñaDelete(DeleteView):
     
 # Lista de peliculas favoritas
 
+@login_required
 def agregaFavoritos(req, pelicula_id):
     pelicula = get_object_or_404(Pelicula, id=pelicula_id)
     usuario = req.user.usuario  # Acceder al perfil del usuario
@@ -289,6 +288,7 @@ def agregaFavoritos(req, pelicula_id):
 
     return redirect('ListaPelicula')
 
+@login_required
 def eliminaFavoritos(req, pelicula_id):
     pelicula = get_object_or_404(Pelicula, id=pelicula_id)
     usuario = req.user.usuario
@@ -299,6 +299,7 @@ def eliminaFavoritos(req, pelicula_id):
 
     return redirect('ListaPelicula')
 
+@login_required
 def listaFavoritos(req):
 
     usuario = req.user.usuario
@@ -312,7 +313,7 @@ def buscaPelicula(req):
         nombre_pelicula = req.POST.get('nombre_pelicula', '')
         if nombre_pelicula:
             try:
-                pelicula = Pelicula.objects.get(titulo__iexact=nombre_pelicula)
+                pelicula = Pelicula.objects.get(titulo__icontains=nombre_pelicula)
                 return redirect('DetallePelicula', pk=pelicula.id)
             except Pelicula.DoesNotExist:
                 error_message = "No se encontro la pelicula"
@@ -320,6 +321,8 @@ def buscaPelicula(req):
     return render(req, 'lista_pelicula.html')
 
 
+def sobreMi(req):
+    return render(req, 'sobre_mi.html')
 
 
 

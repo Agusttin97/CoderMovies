@@ -3,6 +3,7 @@
 {% block ContenidoQueCambia %} 
     <form action="{% url 'Perfil' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {{mensaje}}
         {{ miFormularioUsuario.as_p }}
         {{ miFormularioAvatar.as_p }}
 

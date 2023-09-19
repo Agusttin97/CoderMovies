@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 
 
@@ -32,14 +34,23 @@ class Usuario(models.Model):
     def __str__(self):
         return self.user.username
     
+@receiver(pre_delete, sender=Usuario)
+def eliminar_relaciones_usuario(sender, instance, **kwargs):
+    # Elimina las relaciones con películas antes de eliminar el usuario
+    instance.favoritos.clear()
+    
 class Reseña(models.Model):
     
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     pelicula = models.ForeignKey(Pelicula, on_delete=models.CASCADE)
     fecha = models.DateField(default=timezone.now)
     reseña = models.TextField()
+    
+    def __str__(self):
+        return self.usuario - self.pelicula
   
 class Avatar(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='avatar', null=True)
     imagen = models.ImageField(upload_to="avatares", blank=True, null=True)
+    

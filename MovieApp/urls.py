@@ -30,4 +30,5 @@ urlpatterns = [
     path('lista-favoritos/', listaFavoritos, name='ListaFavoritos'),
     
     path('busca-pelicula/', buscaPelicula, name='BuscaPelicula'),
+    path('about/', sobreMi, name='SobreMi'),
 ]

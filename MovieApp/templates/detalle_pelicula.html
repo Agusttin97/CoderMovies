@@ -19,7 +19,7 @@
                 <p>Usuario: {{ reseña.usuario.username }}</p>
                 <p>Fecha: {{ reseña.fecha }}</p>
                 <p>Reseña: {{ reseña.reseña }}</p>
-                {% if user.is_authenticated and reseña.usuario == user %}
+                {% if user.is_authenticated and reseña.usuario == user or user.is_staff%}
                     <a href="{% url 'ActualizaReseña' reseña.pk %}">Editar</a>
                     <a href="{% url 'EliminaReseña' reseña.pk %}">Eliminar</a>
                 {% endif %}
@@ -29,10 +29,17 @@
         {% endfor %}
     </ul>
 
+    
+    {% if user.is_authenticated %}
+    
     <h2>Escribir una reseña</h2>
     <form method="post" action="">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Enviar reseña</button>
     </form>
+    {% endif %}
+
+    <a href="{% url 'ListaPelicula' %}" class="btn btn-primary">Atras</a>
+        
 {% endblock ContenidoQueCambia %}
