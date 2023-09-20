@@ -2,7 +2,7 @@ Proyecto Final - CoderMovies
 
 Peralta Ariel Agustin - 
 
-Link video:
+Link video: https://youtu.be/gaPhfy3cXZw
 
 Esta proyecto trata de una web en donde se encuentran varias peliculas, y los usuario pueden ver sus detalles, reseñarlas o guardarlas en su lista de peliculas favoritas.
 
